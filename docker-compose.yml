@@ -1,0 +1,37 @@
+version: '3.1'
+
+networks:
+  ccc-network:
+    driver: bridge
+
+volumes:
+  pgdata:
+    driver: local
+
+services:
+  ccc:
+    container_name: ccc_con
+    build:
+      context: .
+      dockerfile: ccc.Dockerfile
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/ccc
+      USER: root
+      PASS: cooldb123
+    ports:
+      - 42069:8080
+    networks:
+      - ccc-network
+
+  postgres:
+    image: postgres
+    container_name: postgresql_ccc
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: cooldb123
+      POSTGRES_DB: ccc
+    networks:
+      - ccc-network
+    volumes:
+      - pgdata:/var/lib/postgresql/data
