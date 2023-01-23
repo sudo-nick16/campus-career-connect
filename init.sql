@@ -54,10 +54,13 @@ create or replace trigger log
 after insert on students
 for each row execute procedure audit_log_func();
 
+-- procedure
 create procedure apply(sid integer, cid integer)
     language sql
     as $$
 insert into applications(studentid, companyid) values(sid, cid);
-$$
+$$;
 
-insert into officers(name, email, password) values ('po', 'po@gmail.com', 'password')
+
+insert into officers(name, email, password) values ('po', 'po@gmail.com', 'password');
+
