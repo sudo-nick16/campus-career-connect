@@ -2,6 +2,7 @@
 <%@ page import="com.sudonick.campuscareerconnect.repository.CompanyRepo" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Arrays" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -26,31 +27,40 @@
 %>
     <div class="container">
         <%@include file="dashboardNav.jsp" %>
-        <div class="w-full table grid grid-cols-5 gap-0 mx-auto text-yellow font-semibold">
-            <h4 class="font-bold border border-yellow p-2 text-xl text-yellow col-span-2">Comapany Name</h4>
+        <div class="w-full table grid grid-cols-6 gap-0 mx-auto text-yellow font-semibold">
+            <h4 class="font-bold border border-yellow p-2 text-xl text-yellow">Comapany Name</h4>
             <h4 class="font-bold border border-yellow p-2 text-xl text-yellow">Website</h4>
             <h4 class="font-bold border border-yellow p-2 text-xl text-yellow">Salary</h4>
+            <h4 class="font-bold border border-yellow p-2 text-xl text-yellow">Venue</h4>
+            <h4 class="font-bold border border-yellow p-2 text-xl text-yellow">Timings</h4>
             <h4 class="font-bold border border-yellow p-2 text-xl text-yellow"></h4>
 
             <% if(!companies.isEmpty()){
                 for(Company c: companies){%>
-                    <p class="col-span-2 truncate"><%=c.name%></p>
+                    <p class="truncate overflow-hidden"><%=c.name%></p>
                     <a href="<%=c.site%>" target="_blank" class="hover:underline overflow-hidden truncate"><%=c.site%></a>
                     <p><%=c.salary%></p>
-                    <form class="h-full w-full">
+                    <p><%=c.venue%></p>
+                    <input name="datetime" type="datetime-local" readonly class="text-sm text-center" value="<%=String.join(":",Arrays.copyOfRange(c.date.toString().split(":"), 0, 2))%>">
+                    <form class="h-full w-full flex items-center justify-evenly">
                         <input name="cid" value="<%=c.id%>" hidden="hidden">
-                        <button formmethod="get" formaction="details.jsp" class="mr-1">
-                            Show
-                        </button>
-                        <button
-                            onclick="return confirm('All applications for this company will be deleted. Do you wish to continue?')"
-                            formaction="company"
-                            formmethod=""
-                            content="blah"
-                            class="ml-1"
-                        >
-                            Delete
-                        </button>
+                        <abbr title="Show details">
+                            <button formmethod="get" formaction="details.jsp" class="mr-4 px-2">
+                                <img src="../images/list.png" class="w-6 h-6">
+                            </button>
+                        </abbr>
+                        <abbr title="Delete">
+                            <button
+                                    onclick="return confirm('All applications for this company will be deleted. Do you wish to continue?')"
+                                    formaction="company"
+                                    formmethod=""
+                                    content="blah"
+                                    class="ml-1 px-2"
+                            >
+                                <img src="../images/recycle-bin.png" class="w-6 h-6">
+                            </button>
+                        </abbr>
+
                     </form>
             <%}}%>
 

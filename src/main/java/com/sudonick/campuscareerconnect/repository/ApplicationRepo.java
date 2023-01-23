@@ -5,6 +5,7 @@ import com.sudonick.campuscareerconnect.models.Company;
 import com.sudonick.campuscareerconnect.models.Student;
 import com.sudonick.campuscareerconnect.utils.DbUtils;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,7 +37,7 @@ public class ApplicationRepo {
 
     public List<Company> getCompaniesByStudentId(int sid){
         try{
-            String query = "select com.id, com.name, com.site, com.salary from applications app inner join companies com on app.companyid=com.id where app.studentid=?";
+            String query = "select com.id, com.name, com.site, com.salary, com.venue, com.date from applications app inner join companies com on app.companyid=com.id where app.studentid=?";
             PreparedStatement stmt = db.prepareStatement(query);
             stmt.setInt(1, sid);
             ResultSet result = stmt.executeQuery();
@@ -50,16 +51,20 @@ public class ApplicationRepo {
 
     public boolean createApplication(int sid, int cid){
         try {
-            String query = "insert into applications(studentid, companyid) values(?, ?)";
-            PreparedStatement stmt = db.prepareStatement(query);
+            // String query = "insert into applications(studentid, companyid) values(?, ?)";
+            String query = "call apply(?, ?)";
+            CallableStatement stmt = db.prepareCall(query);
             stmt.setInt(1, sid);
             stmt.setInt(2, cid);
-            int rs = stmt.executeUpdate();
-            if (rs > 0){
-                return true;
-            }else {
-                return false;
-            }
+            stmt.execute();
+            return true;
+//            System.out.println("did get executed? "+ rs);
+//            return rs;
+//            if (rs > 0) {
+//                return false;
+//            } else {
+//                return true;
+//            }
         }catch (Exception e){
             System.out.println(e);
             return false;

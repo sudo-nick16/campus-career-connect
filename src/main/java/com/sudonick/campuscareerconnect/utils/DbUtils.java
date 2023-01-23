@@ -5,7 +5,9 @@ import com.sudonick.campuscareerconnect.models.PO;
 import com.sudonick.campuscareerconnect.models.Student;
 
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DbUtils {
@@ -54,8 +56,11 @@ public class DbUtils {
             String name = rs.getString("name");
             String site = rs.getString("site");
             String salary = rs.getString("salary");
+            String venue = rs.getString("venue");
+            Timestamp dateTime = rs.getTimestamp("date");
+            System.out.println("Date in dbutils: "+ dateTime);
 
-            Company c = new Company(id, name, site, salary);
+            Company c = new Company(id, name, site, salary, venue, dateTime);
             return c;
         }catch(Exception e){
             System.out.println(e);

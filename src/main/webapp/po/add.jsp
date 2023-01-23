@@ -29,6 +29,10 @@
             <input id="website" name="website">
             <label for="salary">Salary</label>
             <input id="salary" name="salary">
+            <label for="venue">Venue</label>
+            <input id="venue" name="venue">
+            <label for="date-time">Date & Time</label>
+            <input id="date-time" style="color-scheme: dark" name="date-time" type="datetime-local" >
         </div>
         <button class="btn-flare mt-12">
             Add

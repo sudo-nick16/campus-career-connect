@@ -4,10 +4,7 @@ import com.sudonick.campuscareerconnect.database.DB;
 import com.sudonick.campuscareerconnect.models.Company;
 import com.sudonick.campuscareerconnect.utils.DbUtils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 
 public class CompanyRepo {
@@ -60,11 +57,13 @@ public class CompanyRepo {
 
     public Company createCompany(Company company){
         try {
-            String query = "insert into companies(name, site, salary) values(?, ?, ?)";
+            String query = "insert into companies(name, site, salary, venue, date) values(?, ?, ?, ?, ?)";
             PreparedStatement stmt = db.prepareStatement(query);
             stmt.setString(1, company.name);
             stmt.setString(2, company.site);
             stmt.setString(3, company.salary);
+            stmt.setString(4, company.venue);
+            stmt.setTimestamp(5, company.date);
             int r = stmt.executeUpdate();
             if (r > 0){
                 ResultSet rs = stmt.getGeneratedKeys();

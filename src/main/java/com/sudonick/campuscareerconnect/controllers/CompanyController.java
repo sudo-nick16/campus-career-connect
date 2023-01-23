@@ -8,6 +8,11 @@ import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 
 @WebServlet(name = "po/company", value = "/po/company")
 public class CompanyController extends HttpServlet {
@@ -43,12 +48,18 @@ public class CompanyController extends HttpServlet {
             String name = request.getParameter("name").trim();
             String website = request.getParameter("website").trim();
             String salary = request.getParameter("salary").trim();
+            String venue = request.getParameter("venue").trim();
+            String dateTime = request.getParameter("date-time").trim();
+
+            dateTime = dateTime.replace("T", " ");
+            dateTime += ":00.000";
+            Timestamp ts = Timestamp.valueOf(dateTime);
 
             if(name.length() == 0){
                 throw new Exception("Company name cannot be empty");
             }
 
-            Company c = new Company(name, website, salary);
+            Company c = new Company(name, website, salary, venue, ts);
             c = this.repo.createCompany(c);
 
             if (c != null){
