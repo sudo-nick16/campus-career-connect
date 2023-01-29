@@ -2,6 +2,7 @@ package com.sudonick.campuscareerconnect.repository;
 
 import com.sudonick.campuscareerconnect.database.DB;
 import com.sudonick.campuscareerconnect.models.Company;
+import com.sudonick.campuscareerconnect.models.PlacedObject;
 import com.sudonick.campuscareerconnect.models.Student;
 import com.sudonick.campuscareerconnect.utils.DbUtils;
 
@@ -18,7 +19,7 @@ public class ApplicationRepo {
 
     public List<Student> getStudentsByCompanyId(int cid) {
         try{
-            String query = "select stu.id, stu.name, stu.email, stu.regid, stu.password, stu.resume, stu.branch, stu.cgpa from applications app left join students stu on app.studentid=stu.id where companyid=? ";
+            String query = "select stu.id, stu.name, stu.email, stu.regid, stu.password, stu.resume, stu.branch, stu.cgpa, app.id as applicationid from applications app left join students stu on app.studentid=stu.id where companyid=? ";
             PreparedStatement stmt = db.prepareStatement(query);
             stmt.setInt(1, cid);
             ResultSet result = stmt.executeQuery();
@@ -35,13 +36,46 @@ public class ApplicationRepo {
         }
     };
 
+    public List<PlacedObject<Student>> getStudentsByCompanyId(int cid, boolean p) {
+        try{
+            String query = "select stu.id, stu.name, stu.email, stu.regid, stu.password, stu.resume, stu.branch, stu.cgpa, app.placed, app.id as applicationid from applications app left join students stu on app.studentid=stu.id where companyid=? ";
+            PreparedStatement stmt = db.prepareStatement(query);
+            stmt.setInt(1, cid);
+            ResultSet result = stmt.executeQuery();
+            List<PlacedObject<Student>> s = DbUtils.parseStudentsFromRs(result, true);
+            if(s != null){
+                s.forEach(e -> {
+                    e.object.password = "";
+                });
+            }
+            return s;
+        }catch (Exception e){
+            System.out.println(e);
+            return null;
+        }
+    };
+
     public List<Company> getCompaniesByStudentId(int sid){
         try{
-            String query = "select com.id, com.name, com.site, com.salary, com.venue, com.date from applications app inner join companies com on app.companyid=com.id where app.studentid=?";
+            String query = "select com.id, com.name, com.site, com.salary, com.venue, com.date, app.id as applicationid from applications app inner join companies com on app.companyid=com.id where app.studentid=?";
             PreparedStatement stmt = db.prepareStatement(query);
             stmt.setInt(1, sid);
             ResultSet result = stmt.executeQuery();
             List<Company> c = DbUtils.parseCompaniesFromRs(result);
+            return c;
+        }catch (Exception e){
+            System.out.println(e);
+            return null;
+        }
+    };
+
+    public List<PlacedObject<Company>> getCompaniesByStudentId(int sid, boolean p){
+        try{
+            String query = "select com.id, com.name, com.site, com.salary, com.venue, com.date, app.placed, app.id as applicationid from applications app inner join companies com on app.companyid=com.id where app.studentid=?";
+            PreparedStatement stmt = db.prepareStatement(query);
+            stmt.setInt(1, sid);
+            ResultSet result = stmt.executeQuery();
+            List<PlacedObject<Company>> c = DbUtils.parseCompaniesFromRs(result, true);
             return c;
         }catch (Exception e){
             System.out.println(e);
@@ -58,13 +92,19 @@ public class ApplicationRepo {
             stmt.setInt(2, cid);
             stmt.execute();
             return true;
-//            System.out.println("did get executed? "+ rs);
-//            return rs;
-//            if (rs > 0) {
-//                return false;
-//            } else {
-//                return true;
-//            }
+        }catch (Exception e){
+            System.out.println(e);
+            return false;
+        }
+    };
+
+    public boolean placeStudent(int aid){
+        try {
+            String query = "update applications set placed = not placed where id = ?";
+            PreparedStatement stmt = db.prepareStatement(query);
+            stmt.setInt(1, aid);
+            stmt.execute();
+            return true;
         }catch (Exception e){
             System.out.println(e);
             return false;

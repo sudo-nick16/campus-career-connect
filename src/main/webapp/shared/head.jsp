@@ -19,6 +19,8 @@
                     darkblue: '#000C22',
                     yellow: '#FFC700',
                     orange: '#FF9900',
+                    green: '#3B7A57',
+                    red: '#FF2400',
                 }
             }
         }
@@ -26,7 +28,8 @@
 </script>
 <%
     if(request.getRequestURI().endsWith(".jsp") && !request.getRequestURI().endsWith("error.jsp")){
-        request.getSession().setAttribute("lastPage", request.getRequestURI());
+        String queryString = request.getQueryString() == null? "" : "?"+request.getQueryString();
+        request.getSession().setAttribute("lastPage", request.getRequestURI()+queryString);
     }
     System.out.println("LastPath: "+ request.getSession().getAttribute("lastPage"));
 %>

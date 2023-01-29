@@ -42,17 +42,17 @@
         <img src="images/warning.png" class="w-60 h-auto" alt="goal">
     </div>
     <div class="flex flex-col items-center justify-center mt-8">
-        <h2 class="font-bold text-3xl text-white">
+        <div class="font-bold text-3xl text-white w-[600px] flex flex-wrap justify-center items-center">
             <%
                 int index = 0;
                 for(String e: error.split(" ")){
                     if(index%2 == 0){
             %>
-                <span class="text-white"><%=e%></span>
+                <span class="text-white"><%=e%>&nbsp;</span>
             <%}else{%>
-                <span class="text-yellow"><%=e%></span>
+                <span class="text-yellow"><%=e%>&nbsp;</span>
             <%}; index++;}%>
-        </h2>
+        </div>
         <div class="flex flex-row mt-8">
             <a class="" href="<%=lastPage%>">
                 <button class="mx-4 btn-flare">
